@@ -1,0 +1,36 @@
+<h2 class="mb-4">Upload a Story</h2>
+
+<%= form_with model: @story, local: true, html: { multipart: true } do |form| %>
+
+  <div class="mb-3">
+    <%= form.label :title %>
+    <%= form.text_field :title, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :cover_image %>
+    <%= form.file_field :cover_image, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :description %>
+    <%= form.text_area :description, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :language %>
+    <%= form.text_field :language, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :category %>
+    <%= form.select :category, ['Folktale', 'Spiritual', 'Historical', 'Modern'], {}, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :audio %>
+    <%= form.file_field :audio, class: "form-control" %>
+  </div>
+
+  <%= form.submit "Upload", class: "btn btn-primary" %>
+<% end %>

@@ -1,0 +1,56 @@
+<!-- Story Content Card -->
+<div class="card shadow-sm border-light p-4 mt-4">
+  <h2 class="card-title"><%= @story.title %></h2>
+  <p class="card-text"><%= @story.description %></p>
+  <p><strong>Language:</strong> <%= @story.language %></p>
+  <p><strong>Category:</strong> <%= @story.category %></p>
+
+  <% if @story.audio.attached? %>
+    <audio controls class="mt-3 w-100">
+      <source src="<%= url_for(@story.audio) %>" type="<%= @story.audio.content_type %>">
+      Your browser does not support the audio element.
+    </audio>
+
+    <div class="mt-3 d-flex gap-2">
+      <%= button_to '📝 Transcribe', transcribe_story_path(@story), method: :post, class: "btn btn-outline-secondary" %>
+      <%= button_to '🧠 Summarize', summarize_story_path(@story), method: :post, class: "btn btn-outline-info" %>
+    </div>
+  <% else %>
+    <p class="text-muted mt-2">No audio uploaded.</p>
+  <% end %>
+
+  <div class="mt-3 d-flex align-items-center gap-3">
+    <% if current_user.favorites.exists?(story: @story) %>
+      <%= button_to 'Unlike ❤️', story_favorites_path(@story, current_user.favorites.find_by(story: @story)), method: :delete, class: "btn btn-outline-danger" %>
+    <% else %>
+      <%= button_to 'Like 👍', story_favorites_path(@story), method: :post, class: "btn btn-outline-primary" %>
+    <% end %>
+    <strong><%= @story.favorites.count %> Likes</strong>
+  </div>
+</div>
+
+<!-- Comments Section (Outside the Story Card) -->
+<div class="card border-light p-4 mt-4">
+  <h4 class="card-title mb-3">💬 Comments (<%= @story.comments.count %>)</h4>
+
+  <%= form_with(model: [@story, Comment.new], local: true) do |form| %>
+    <div class="mb-3">
+      <%= form.text_area :content, class: "form-control", placeholder: "Leave a comment...", rows: 3 %>
+    </div>
+    <%= form.submit "Post Comment", class: "btn btn-primary" %>
+  <% end %>
+
+  <ul class="list-group list-group-flush mt-4">
+    <% @story.comments.each do |comment| %>
+      <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div>
+          <strong><%= comment.user.email %></strong>
+          <p class="mb-1"><%= comment.content %></p>
+        </div>
+        <% if comment.user == current_user %>
+          <%= button_to "🗑️", story_comment_path(@story, comment), method: :delete, class: "btn btn-sm btn-outline-danger", data: { confirm: "Delete this comment?" } %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>

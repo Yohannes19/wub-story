@@ -1,0 +1,2 @@
+module Narrator::DashboardHelper
+end

@@ -1,0 +1,2 @@
+module Listener::DashboardHelper
+end

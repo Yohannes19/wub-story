@@ -1,0 +1,10 @@
+<div class="text-center my-5">
+  <h1 class="display-4 fw-semibold">Welcome to WubTeret</h1>
+  <p class="lead">Preserving Ethiopian stories, chants, and oral traditions in one place.</p>
+
+  <% unless user_signed_in? %>
+    <%= link_to "Get Started", new_user_registration_path, class: "btn btn-primary btn-lg mt-3 px-4" %>
+  <% else %>
+    <%= link_to "Go to Dashboard", stories_path, class: "btn btn-outline-primary btn-lg mt-3 px-4" %>
+  <% end %>
+</div>

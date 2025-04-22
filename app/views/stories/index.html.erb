@@ -1,0 +1,9 @@
+<h2 class="mb-4">All Stories</h2>
+
+<% @stories.each do |story| %>
+  <div class="mb-4 p-3 bg-white shadow-sm rounded">
+    <h4><%= link_to story.title, story_path(story) %></h4>
+    <p><%= truncate(story.description, length: 100) %></p>
+    <p class="text-muted"><strong>Language:</strong> <%= story.language %>, <strong>Category:</strong> <%= story.category %></p>
+  </div>
+<% end %>
