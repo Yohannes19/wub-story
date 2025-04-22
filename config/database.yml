@@ -15,8 +15,8 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  username: postgres
-  password: Sennahoy@321
+  username: ENV['WUBTERET_DATABASE_USERNAME'] 
+  password: ENV['WUBTERET_DATABASE_PASSWORD']
   host: localhost
   port: 5432
   # For details on connection pooling, see Rails configuration guide
