@@ -1,27 +1,53 @@
-<div class="container mt-5">
-<h2>Edit Profile</h2>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
 
-<%= form_with model: @user, url: profile_path(@user), method: :patch, local: true do |form| %>
-    <div class="mb-3">
-    <%= form.label :username %>
-    <%= form.text_field :username, class: "form-control" %>
+      <div class="card shadow-lg p-4">
+        <h3 class="mb-4">Edit Profile</h3>
+
+        <%= form_with(model: @user, url: profile_path(@user), local: true, method: :patch, html: { multipart: true }) do |form| %>
+
+          <div class="mb-3">
+            <%= form.label :username %>
+            <%= form.text_field :username, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :profile_image, "Profile Image" %>
+            <%= form.file_field :profile_image, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :location, "Location" %>
+            <%= form.text_field :location, class: "form-control", id: "location_field" %>
+            <button type="button" class="btn btn-secondary mt-2" onclick="detectLocation()">📍 Auto Detect Location</button>
+          </div>
+
+          <div class="d-grid">
+            <%= form.submit "Update Profile", class: "btn btn-primary" %>
+          </div>
+
+        <% end %>
+
+      </div>
+
     </div>
-
-    <div class="mb-3">
-    <%= form.label :location %>
-    <%= form.text_field :location, class: "form-control" %>
-    </div>
-
-    <div class="mb-3">
-      <%= form.label :bio %>
-      <%= form.text_area :bio, class: "form-control" %>
-    </div>
-
-    <div class="mb-3">
-      <%= form.label :profile_image %>
-      <%= form.text_field :profile_image, class: "form-control" %>
-    </div>
-
-    <%= form.submit "Save Changes", class: "btn btn-primary" %>
-  <% end %>
+  </div>
 </div>
+
+<script>
+  function detectLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById('location_field').value = data.address.city || data.address.town || data.address.village || "Unknown location";
+          })
+          .catch(error => console.error(error));
+      });
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
+  }
+</script>

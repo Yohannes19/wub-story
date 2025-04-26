@@ -16,6 +16,9 @@ class User < ApplicationRecord
   has_many :passive_follows, class_name: "Follow", foreign_key: "followed_id", dependent: :destroy
   has_many :followers, through: :passive_follows, source: :follower
 
+  has_one_attached :profile_image
+  validates :username, presence: true, uniqueness: { case_sensitive: false }
+
 
   def following?(other_user)
     following.include?(other_user)

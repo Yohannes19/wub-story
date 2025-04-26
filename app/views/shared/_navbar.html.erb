@@ -28,13 +28,9 @@
             <a class="nav-link dropdown-toggle p-0" href="#" id="userDropdown" role="button"
                 data-bs-toggle="dropdown" aria-expanded="false">
               <% if current_user.profile_image.present? %>
-                <img src="<%= current_user.profile_image %>" alt="Profile"
-                      class="rounded-circle"
-                      style="height: 40px; width: 40px; object-fit: cover;">
+                <%= image_tag current_user.profile_image.variant(resize_to_fill: [40, 40]), class: "rounded-circle mb-3", alt: "Profile Image" %>         
               <% else %>
-                <img src="<%= asset_path('logo2.png') %>" alt="Profile"
-                      class="rounded-circle"
-                      style="height: 40px; width: 40px; object-fit: cover;">
+                <%= image_tag 'logo1.png', class: "rounded-circle mb-3", alt: "Default Profile Image", size: "40x40" %>
               <% end %>
             </a>
 
@@ -42,7 +38,7 @@
               <li class="dropdown-item-text text-center">
                 <strong><%= current_user.username.presence || current_user.email %></strong>
               </li>
-              <li><hr class="dropdown-divider"></li>
+              <li><hr class="dropdown"></li>
               <li><%= link_to 'My Profile', profile_path(current_user), class: "dropdown-item" %></li>
               <li><%= link_to 'Edit Profile', edit_profile_path(current_user), class: "dropdown-item" %></li>
               <li><hr class="dropdown-divider"></li>
