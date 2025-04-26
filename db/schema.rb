@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_22_200537) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_26_120340) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -59,12 +59,22 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_22_200537) do
     t.index ["user_id"], name: "index_collections_on_user_id"
   end
 
+  create_table "comment_likes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "comment_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["comment_id"], name: "index_comment_likes_on_comment_id"
+    t.index ["user_id"], name: "index_comment_likes_on_user_id"
+  end
+
   create_table "comments", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "story_id", null: false
     t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "parent_id"
     t.index ["story_id"], name: "index_comments_on_story_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
@@ -76,6 +86,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_22_200537) do
     t.datetime "updated_at", null: false
     t.index ["story_id"], name: "index_favorites_on_story_id"
     t.index ["user_id"], name: "index_favorites_on_user_id"
+  end
+
+  create_table "follows", force: :cascade do |t|
+    t.bigint "follower_id", null: false
+    t.bigint "followed_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["followed_id"], name: "index_follows_on_followed_id"
+    t.index ["follower_id", "followed_id"], name: "index_follows_on_follower_id_and_followed_id", unique: true
+    t.index ["follower_id"], name: "index_follows_on_follower_id"
   end
 
   create_table "stories", force: :cascade do |t|
@@ -100,6 +120,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_22_200537) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "role", default: 0
+    t.string "username"
+    t.text "bio"
+    t.string "location"
+    t.string "profile_image"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -109,9 +133,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_22_200537) do
   add_foreign_key "collection_stories", "collections"
   add_foreign_key "collection_stories", "stories"
   add_foreign_key "collections", "users"
+  add_foreign_key "comment_likes", "comments"
+  add_foreign_key "comment_likes", "users"
   add_foreign_key "comments", "stories"
   add_foreign_key "comments", "users"
   add_foreign_key "favorites", "stories"
   add_foreign_key "favorites", "users"
+  add_foreign_key "follows", "users", column: "followed_id"
+  add_foreign_key "follows", "users", column: "follower_id"
   add_foreign_key "stories", "users"
 end

@@ -1,32 +1,110 @@
 <div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h2 class="mb-0">Welcome, <%= current_user.email %> 👋</h2>
-      <p class="text-muted">Here are your uploaded stories</p>
+  <div class="row min-vh-100">
+    <!-- Left Profile Column (Full Height) -->
+    <div class="col-md-2 d-flex flex-column p-4 order-md-2" style="border-left: 1px solid #dee2e6;">
+    <!-- Profile Info -->
+    <div class="text-left d-flex flex-column">
+      <%= image_tag("logo2.png", class: "rounded-circle mb-3", size: "100x100") %>
+      <h5 class="mb-0"><%= current_user.email %></h5>
+      <small class="text-muted">Storyteller</small>
+      <p class="text-muted mt-2"><%= current_user.followers.size %> Followers</p>
+      <p class="text-muted mt-2">Joined <%= current_user.created_at.strftime("%B %Y") %></p>
     </div>
-    <%= link_to "Upload New Story", new_story_path, class: "btn btn-primary" %>
+  
+    <!-- Push this to the bottom -->
+    <p class="text-muted mt-auto">User has been created <%= current_user.created_at.strftime("%B %Y") %></p>
   </div>
+  
 
-  <% if @stories.any? %>
-    <ul class="list-group">
-      <% @stories.each do |story| %>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <div>
-            <strong><%= link_to story.title, story_path(story), class: "text-decoration-none" %></strong><br>
-            <small class="text-muted"><%= story.language %> | <%= story.category %></small>
-          </div>
-          <div>
-            <%= link_to "View", story_path(story), class: "btn btn-outline-primary btn-sm me-2" %>
-            <%= link_to "Edit", edit_story_path(story), class: "btn btn-outline-secondary btn-sm me-2" %>
-            <%= link_to "Delete", story_path(story), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-outline-danger btn-sm" %>
-          </div>
+    <!-- Right Column with Tabs -->
+    <div class="col-md-10 p-3 order-md-1">
+      <h4 class="mb-3"><%= current_user.email %></h4>
+
+      <!-- Transparent Tabs -->
+      <ul class="nav nav-tabs border-bottom mb-3" id="profileTabs" role="tablist" style="border: none;">
+        <li class="nav-item" role="presentation">
+          <a class="nav-link active border-0 text-dark" id="home-tab" data-bs-toggle="tab" href="#home" role="tab">🏠 Home</a>
         </li>
-      <% end %>
-    </ul>
-  <% else %>
-    <div class="alert alert-info">
-      You haven’t uploaded any stories yet.
-      <%= link_to "Upload one now", new_story_path, class: "alert-link" %>.
+        <li class="nav-item" role="presentation">
+          <a class="nav-link border-0 text-dark" id="stories-tab" data-bs-toggle="tab" href="#stories" role="tab">📚 Stories</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link border-0 text-dark" id="about-tab" data-bs-toggle="tab" href="#about" role="tab">ℹ️ About</a>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="profileTabsContent">
+        <!-- Home Tab -->
+        <div class="tab-pane fade show active" id="home" role="tabpanel">
+          <div class="row">
+            <% stats = {
+              "Stories" => @stories.count,
+              "Total Views" => @stories.sum { |s| s.favorites.count },
+              "Total Likes" => @stories.sum { |s| s.favorites.count },
+              "Total Comments" => @stories.sum { |s| s.comments.count }
+            } %>
+
+            <% stats.each do |label, value| %>
+              <div class="col-md-6 mb-3">
+                <div class="card shadow-sm text-center">
+                  <div class="card-body">
+                    <h6 class="text-muted"><%= label %></h6>
+                    <h4><%= value %></h4>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Stories Tab -->
+        <div class="tab-pane fade" id="stories" role="tabpanel">
+          <% if @stories.any? %>
+            <div class="row">
+              <% @stories.each do |story| %>
+                <div class="col-md-6 mb-4">
+                  <div class="card h-100 shadow-sm">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                      <div>
+                        <h6 class="card-title">
+                          <%= link_to story.title, story_path(story), class: "text-decoration-none text-dark" %>
+                        </h6>
+                        <p class="text-muted small"><%= story.language %> | <%= story.category %></p>
+                      </div>
+                      <div class="mb-2">
+                        <span class="badge bg-light text-dark me-1">👀 <%= story.favorites.count %></span>
+                        <span class="badge bg-light text-dark me-1">❤️ <%= story.favorites.count %></span>
+                        <span class="badge bg-light text-dark">💬 <%= story.comments.count %></span>
+                      </div>
+                      <div class="d-flex justify-content-start gap-2">
+                        <%= link_to "View", story_path(story), class: "btn btn-outline-primary btn-sm" %>
+                        <%= link_to "Edit", edit_story_path(story), class: "btn btn-outline-secondary btn-sm" %>
+                        <%= link_to "Delete", story_path(story), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-outline-danger btn-sm" %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="alert alert-info text-center">
+              You haven’t uploaded any stories yet.
+              <%= link_to "Upload one now", new_story_path, class: "alert-link" %>.
+            </div>
+          <% end %>
+        </div>
+
+        <!-- About Tab -->
+        <div class="tab-pane fade" id="about" role="tabpanel">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h6>About the Narrator</h6>
+              <p class="text-muted">Here you can add a short biography, storytelling inspiration, or cultural background of the narrator.</p>
+              <p class="text-muted">Feel free to add a section for contact or collaboration if needed.</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  <% end %>
+  </div>
 </div>

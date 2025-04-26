@@ -1,0 +1,19 @@
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-body text-center">
+      <% if @user.profile_image.present? %>
+        <img src="<%= @user.profile_image %>" class="rounded-circle" style="width: 100px; height: 100px;" alt="Profile Image">
+      <% else %>
+        <img src="<%= asset_path('logo1.png') %>" class="rounded-circle" style="width: 100px; height: 100px;" alt="Default Profile">
+      <% end %>
+
+      <h3 class="mt-3"><%= @user.username.presence || @user.email %></h3>
+      <p><%= @user.location %></p>
+      <p><%= @user.bio %></p>
+
+      <% if current_user == @user %>
+        <%= link_to "Edit Profile", edit_profile_path(@user), class: "btn btn-primary mt-3" %>
+      <% end %>
+    </div>
+  </div>
+</div>

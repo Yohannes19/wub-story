@@ -14,6 +14,30 @@ class CommentsController < ApplicationController
       @comment.destroy if @comment.user == current_user
       redirect_to @story
     end
+
+    def update
+      @comment = @story.comments.find(params[:id])
+      if @comment.user == current_user
+        if @comment.update(comment_params)
+          redirect_to @story, notice: 'Comment was successfully updated.'
+        else
+          render :edit
+        end
+      else
+        redirect_to @story, alert: 'You are not authorized to update this comment.'
+      end
+    end
+
+    def edit  
+      @comment = @story.comments.find(params[:id])
+      if @comment.user != current_user
+        redirect_to @story, alert: 'You are not authorized to edit this comment.'
+      end
+    end
+
+
+
+
   
     private
   

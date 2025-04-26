@@ -1,34 +1,54 @@
-<h2>Sign up</h2>
+<div class="container-fluid vh-100">
+  <div class="row h-100">
+    <!-- Left Branding Panel -->
+    <div class="col-md-6 d-none d-md-flex bg-dark text-white align-items-center justify-content-center" style="background-image: url('/assets/ethiopian.jpg'); background-size: cover; background-position: center; border-radius: 1rem 1rem 1rem 1rem;">
+      <div class="text-center px-4">
+        <h1 class="display-4 fw-bold">Welcome WubStory</h1>
+        # <p class="lead">Preserving our stories, one tale at a time.</p>
+      </div>
+    </div>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+    <!-- Right Form Panel -->
+    <div class="col-md-6 d-flex align-items-center justify-content-center">
+      <div class="w-100" style="max-width: 450px;">
+        <h3 class="mb-4 text-center">Create your account</h3>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+          <%= render "devise/shared/error_messages", resource: resource %>
+
+          <div class="mb-3">
+            <%= f.label :email, class: "form-label" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :role, "I am a...", class: "form-label" %>
+            <%= f.select :role, User.roles.keys.map { |r| [r.humanize.capitalize, r] }, {}, class: "form-select" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :password, class: "form-label" %>
+            <% if @minimum_password_length %>
+              <small class="text-muted">(<%= @minimum_password_length %> characters minimum)</small>
+            <% end %>
+            <%= f.password_field :password, autocomplete: "new-password", class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :password_confirmation, class: "form-label" %>
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control" %>
+          </div>
+
+          <div class="d-grid mb-3">
+            <%= f.submit "Sign up", class: "btn btn-success btn-block" %>
+          </div>
+        <% end %>
+
+        <div class="text-center">
+          <p class="mb-0">Already have an account?</p>
+          <%= link_to "Sign in", new_session_path(resource_name), class: "btn btn-outline-secondary btn-sm mt-2" %>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <div class="mb-3">
-  <%= f.label :role, "I am a..." %>
-  <%= f.select :role, User.roles.keys.map { |r| [r.humanize.capitalize, r] }, {}, class: "form-control" %>
 </div>
-
-  <div class="field">
-    <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>

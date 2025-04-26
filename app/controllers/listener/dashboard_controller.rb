@@ -14,18 +14,18 @@ class Listener::DashboardController < ApplicationController
     @stories = @stories.order(created_at: :desc)
 
    
-  if params[:query].present?
-    @stories = @stories.where("title ILIKE :q OR description ILIKE :q", q: "%#{params[:query]}%")
-  end
+    if params[:query].present?
+      @stories = @stories.where("title ILIKE :q OR description ILIKE :q", q: "%#{params[:query]}%")
+    end
 
-  if params[:category].present? && params[:category] != "All"
-    @stories = @stories.where(category: params[:category])
-  end
+    if params[:category].present? && params[:category] != "All"
+      @stories = @stories.where(category: params[:category])
+    end
 
-  if params[:language].present? && params[:language] != "All"
-    @stories = @stories.where(language: params[:language])
-  end
+    if params[:language].present? && params[:language] != "All"
+      @stories = @stories.where(language: params[:language])
+    end
 
-  @stories = @stories.order(created_at: :desc)
+    @stories = @stories.order(created_at: :desc)
   end
 end

@@ -2,8 +2,8 @@ Rails.application.routes.draw do
 
   get 'dashboard', to: 'dashboard#index'
   
- # Narrator namespace
- namespace :narrator do
+  # Narrator namespace
+  namespace :narrator do
   get 'dashboard', to: 'dashboard#index'
   # Future: narrator-specific features
 end
@@ -17,12 +17,26 @@ end
 
   resources :stories do
     resources :favorites, only: [:create, :destroy]
-    resources :comments, only: [:create, :destroy]
+    resources :comments, only: [:create, :destroy, :update, :edit]
+      post 'like', to: 'comment_likes#create'
+      delete 'unlike', to: 'comment_likes#destroy'
     post :transcribe, on: :member
     post :summarize, on: :member
   end
 
-  devise_for :users
+  devise_for :users, controllers: {
+    registrations: 'users/registrations'
+  }
+
+  resources :users, only: [] do
+    post 'follow', to: 'follows#create'
+    delete 'unfollow', to: 'follows#destroy'
+  end
+
+
+  resources :follows, only: [:create, :destroy]
+  resources :profiles, only: [:show, :edit, :update]
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

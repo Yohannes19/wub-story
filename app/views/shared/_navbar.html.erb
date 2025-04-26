@@ -1,0 +1,68 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+    <%= link_to (user_signed_in? ? dashboard_path : root_path), class: "navbar-brand" do %>
+      <img src="<%= asset_path('logo2.png') %>" alt="WubTeret Logo" style="height: 40px;" class="d-inline-block align-text-top">
+    <% end %>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-center justify-content-start gap-3">
+        <% if user_signed_in? %>
+          <% if current_user.role == "narrator" %> <!-- Check if the user is a narrator -->
+            <li class="nav-item me-2">
+              <%= link_to '➕ Create Story', new_story_path, class: "btn btn-secondary" %>
+            </li>
+          <% end %>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle p-0" href="#" id="userDropdown" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+              <% if current_user.profile_image.present? %>
+                <img src="<%= current_user.profile_image %>" alt="Profile"
+                      class="rounded-circle"
+                      style="height: 40px; width: 40px; object-fit: cover;">
+              <% else %>
+                <img src="<%= asset_path('logo2.png') %>" alt="Profile"
+                      class="rounded-circle"
+                      style="height: 40px; width: 40px; object-fit: cover;">
+              <% end %>
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li class="dropdown-item-text text-center">
+                <strong><%= current_user.username.presence || current_user.email %></strong>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li><%= link_to 'My Profile', profile_path(current_user), class: "dropdown-item" %></li>
+              <li><%= link_to 'Edit Profile', edit_profile_path(current_user), class: "dropdown-item" %></li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <%= button_to 'Logout', destroy_user_session_path,
+                      method: :delete,
+                      form: { class: "d-inline" },
+                      class: "dropdown-item" %>
+              </li>
+            </ul>
+          </li>
+        <% else %>
+          <li class="nav-item">
+            <%= link_to 'Login', new_user_session_path, class: "nav-link" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to 'Sign Up', new_user_registration_path, class: "nav-link" %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</nav>

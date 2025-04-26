@@ -29,6 +29,33 @@
   </div>
 </div>
 
+<!-- Channel Section (like YouTube Channel Info) -->
+<div class="card shadow-sm p-3 px-4 d-flex flex-md-row align-items-center justify-content-between mb-4">
+  <div class="d-flex align-items-center gap-3">
+    <div class="rounded-circle bg-light d-flex justify-content-center align-items-center" style="width: 60px; height: 60px;">
+      <span class="fs-4 fw-bold text-primary">
+        <%= @story.user.email.first.upcase %>
+      </span>
+    </div>
+    <div>
+      <h5 class="mb-1"><%= @story.user.email %></h5>
+      <p class="mb-0 text-muted">
+        <%= pluralize(@story.user.followers.count, 'Follower') %> 
+      </p>
+    </div>
+  </div>
+
+  <% if current_user != @story.user && current_user.listener? %>
+    <% if current_user.following.exists?(id: @story.user.id) %>
+      <%= button_to "Following", user_unfollow_path(@story.user), method: :delete, class: "btn btn-light border", disabled: false %>
+    <% else %>
+      <%= button_to "Follow", user_follow_path(@story.user.id), method: :post, class: "btn btn-success px-4 fw-bold" %>
+    <% end %>
+  <% end %>
+</div>
+
+
+
 <!-- Comments Section (Outside the Story Card) -->
 <div class="card border-light p-4 mt-4">
   <h4 class="card-title mb-3">💬 Comments (<%= @story.comments.count %>)</h4>
@@ -40,17 +67,11 @@
     <%= form.submit "Post Comment", class: "btn btn-primary" %>
   <% end %>
 
+  <!-- Comments List -->
   <ul class="list-group list-group-flush mt-4">
-    <% @story.comments.each do |comment| %>
-      <li class="list-group-item d-flex justify-content-between align-items-start">
-        <div>
-          <strong><%= comment.user.email %></strong>
-          <p class="mb-1"><%= comment.content %></p>
-        </div>
-        <% if comment.user == current_user %>
-          <%= button_to "🗑️", story_comment_path(@story, comment), method: :delete, class: "btn btn-sm btn-outline-danger", data: { confirm: "Delete this comment?" } %>
-        <% end %>
-      </li>
-    <% end %>
-  </ul>
+    <%= render @story.comments.where(parent_id: nil) %>
+</ul>
+
+
+
 </div>

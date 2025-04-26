@@ -44,9 +44,14 @@ group :development, :test do
   gem 'pry', '~> 0.15.0'
 end
 
-# Gemfile
 gem 'image_processing', '~> 1.2'
 
+gem 'stimulus-rails'
+
+gem "importmap-rails"
+
+
+gem 'dotenv-rails', groups: [:development, :test]
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
