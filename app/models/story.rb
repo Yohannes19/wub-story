@@ -1,6 +1,6 @@
 class Story < ApplicationRecord
   belongs_to :user
-  has_one_attached :audio
+  has_one_attached :audio_file
   has_one_attached :cover_image
   has_many :favorites, dependent: :destroy
   has_many :comments, dependent: :destroy

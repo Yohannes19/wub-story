@@ -88,6 +88,6 @@ class StoriesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def story_params
-      params.require(:story).permit(:title, :description, :language, :category, :audio, :cover_image, :user_id)
+      params.require(:story).permit(:title, :description, :language, :category, :audio_file, :cover_image, :user_id)
     end
 end
