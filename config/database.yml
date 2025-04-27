@@ -84,5 +84,5 @@ test:
 production:
   <<: *default
   database: wubteret_production
-  username: wubteret
+  username: posrgres
   password: <%= ENV["DATABASE_PASSWORD"] %>
