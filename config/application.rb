@@ -24,5 +24,6 @@ module Wubteret
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    config.hosts << "9f56-5-146-192-253.ngrok-free.app"
   end
 end

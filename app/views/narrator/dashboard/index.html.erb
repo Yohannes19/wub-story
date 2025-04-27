@@ -4,7 +4,7 @@
     <div class="col-md-2 d-flex flex-column p-4 order-md-2" style="border-left: 1px solid #dee2e6;">
     <!-- Profile Info -->
     <div class="text-left d-flex flex-column">
-      <%= image_tag("logo2.png", class: "rounded-circle mb-3", size: "100x100") %>
+      <%= image_tag(current_user.profile_image_or_default , class: "rounded-circle mb-3", size: "100x100") %>
       <h5 class="mb-0"><%= current_user.email %></h5>
       <small class="text-muted">Storyteller</small>
       <p class="text-muted mt-2"><%= current_user.followers.size %> Followers</p>
@@ -36,25 +36,94 @@
       <div class="tab-content" id="profileTabsContent">
         <!-- Home Tab -->
         <div class="tab-pane fade show active" id="home" role="tabpanel">
-          <div class="row">
-            <% stats = {
-              "Stories" => @stories.count,
-              "Total Views" => @stories.sum { |s| s.favorites.count },
-              "Total Likes" => @stories.sum { |s| s.favorites.count },
-              "Total Comments" => @stories.sum { |s| s.comments.count }
-            } %>
-
-            <% stats.each do |label, value| %>
-              <div class="col-md-6 mb-3">
-                <div class="card shadow-sm text-center">
-                  <div class="card-body">
-                    <h6 class="text-muted"><%= label %></h6>
-                    <h4><%= value %></h4>
-                  </div>
-                </div>
-              </div>
-            <% end %>
+        <div class="row">
+        <div class="col-12 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">Story Engagement Over Time</h5>
+              <canvas id="growthChart" height="150"></canvas>
+            </div>
           </div>
+        </div>
+      
+        <div class="col-12 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">Viewers by Location</h5>
+              <canvas id="locationChart" height="10"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          var ctxGrowth = document.getElementById('growthChart').getContext('2d');
+          var growthChart = new Chart(ctxGrowth, {
+            type: 'line',
+            data: {
+              labels: <%= raw @views_over_time.keys.map { |date| date.strftime("%b %d") }.to_json %>,
+              datasets: [
+                {
+                  label: 'Views',
+                  data: <%= raw @views_over_time.values.to_json %>,
+                  borderColor: '#007bff',
+                  backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                  tension: 0.4
+                },
+                {
+                  label: 'Comments',
+                  data: <%= raw @comments_over_time.values.to_json %>,
+                  borderColor: '#28a745',
+                  backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                  tension: 0.4
+                },
+                {
+                  label: 'Likes',
+                  data: <%= raw @likes_over_time.values.to_json %>,
+                  borderColor: '#ffc107',
+                  backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                  tension: 0.4
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'top',
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+      
+          var ctxLocation = document.getElementById('locationChart').getContext('2d');
+          var locationChart = new Chart(ctxLocation, {
+            type: 'pie',
+            data: {
+              labels: <%= raw @viewer_locations.keys.to_json %>,
+              datasets: [{
+                data: <%= raw @viewer_locations.values.to_json %>,
+                backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545']
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'bottom'
+                }
+              }
+            }
+          });
+        });
+      </script>
+      
         </div>
 
         <!-- Stories Tab -->

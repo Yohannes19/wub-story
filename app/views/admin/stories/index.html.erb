@@ -1,0 +1,43 @@
+<!-- app/views/admin/stories/index.html.erb -->
+
+<h1>Manage Stories</h1>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Category</th>
+      <th>Language</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @stories.each do |story| %>
+      <tr>
+        <td><%= story.title %></td>
+        <td><%= story.user.username if story.user %></td>
+        <td><%= story.category %></td>
+        <td><%= story.language %></td>
+        <td>
+          <% if story.status == "pending" %>
+            <span class="badge bg-warning text-dark">Pending</span>
+          <% elsif story.status == "approved" %>
+            <span class="badge bg-success">Approved</span>
+          <% elsif story.status == "rejected" %>
+            <span class="badge bg-danger">Rejected</span>
+          <% end %>
+        </td>
+        <td>
+          <% if story.status == "pending" %>
+            <%= button_to "Approve", approve_admin_story_path(story), method: :patch, class: "btn btn-success btn-sm" %>
+            <%= button_to "Reject", reject_admin_story_path(story), method: :patch, class: "btn btn-warning btn-sm" %>
+          <% end %>
+
+          <%= button_to "Delete", admin_story_path(story), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -22,8 +22,8 @@
           </div>
 
           <div class="mb-3">
-            <%= f.label :role, "I am a...", class: "form-label" %>
-            <%= f.select :role, User.roles.keys.map { |r| [r.humanize.capitalize, r] }, {}, class: "form-select" %>
+          <%= f.label :role, "I am a...", class: "form-label" %>
+          <%= f.select :role, User.roles.except(:admin).map { |r, _| [r.humanize.capitalize, r] }, { prompt: "Select your role" }, class: "form-select" %>
           </div>
 
           <div class="mb-3">

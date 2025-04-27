@@ -1,4 +1,20 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    get 'dashboard', to: 'dashboard#index'
+    resources :users, only: [:index, :destroy, :show, :edit] do
+      member do
+        patch :suspend
+        patch :unsuspend
+      end
+    end
+  
+    resources :stories, only: [:index, :destroy] do
+      member do
+        patch :approve
+        patch :reject
+      end
+    end
+  end
 
   get 'dashboard', to: 'dashboard#index'
   

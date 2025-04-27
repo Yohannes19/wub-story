@@ -1,10 +1,31 @@
-<div class="text-center my-5">
-  <h1 class="display-4 fw-semibold">Welcome to WubTeret</h1>
-  <p class="lead">Preserving Ethiopian stories, chants, and oral traditions in one place.</p>
+<!-- Close the style tag properly and move it to appropriate section -->
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .hero {
+    background-image: url('<%= asset_path("home.jpg") %>');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
 
-  <% unless user_signed_in? %>
-    <%= link_to "Get Started", new_user_registration_path, class: "btn btn-primary btn-lg mt-3 px-4" %>
-  <% else %>
-    <%= link_to "Go to Dashboard", stories_path, class: "btn btn-outline-primary btn-lg mt-3 px-4" %>
-  <% end %>
+<!-- Hero section with adjusted content -->
+<div class="hero">
+  <div class="text-center">  <!-- Removed my-5 class -->
+    <h1 class="display-4 fw-semibold">Welcome to WubStory</h1>
+    <p class="lead">Preserving Ethiopian stories, chants, and oral traditions in one place.</p>
+
+    <% unless user_signed_in? %>
+      <%= link_to "Get Started", new_user_registration_path, class: "btn btn-primary btn-lg mt-3 px-4" %>
+    <% else %>
+      <%= link_to "Go to Dashboard", stories_path, class: "btn btn-outline-primary btn-lg mt-3 px-4" %>
+    <% end %>
+  </div>
 </div>

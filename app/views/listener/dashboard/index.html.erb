@@ -3,8 +3,11 @@
 <div class="mb-4 d-flex flex-wrap gap-2 align-items-center justify-content-between">
   <%= form_with url: listener_dashboard_path, method: :get, local: true, class: "d-flex flex-grow-1 gap-2" do %>
     <%= text_field_tag :query, params[:query], placeholder: "Search stories...", class: "form-control" %>
-    <%= select_tag :category, options_for_select(["All", "Folktale", "Spiritual", "Historical"], params[:category] || "All"), class: "form-select" %>
-    <%= select_tag :language, options_for_select(["All", "Amharic", "Oromo", "Tigrigna"], params[:language] || "All"), class: "form-select" %>
+
+    <%= select_tag :category, options_for_select(["All"] + @categories, params[:category] || "All"), class: "form-select" %>
+
+    <%= select_tag :language, options_for_select(["All"] + @languages, params[:language] || "All"), class: "form-select" %>
+
     <%= submit_tag "Search", class: "btn btn-outline-primary" %>
   <% end %>
 </div>

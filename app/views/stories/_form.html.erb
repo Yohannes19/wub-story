@@ -1,52 +1,48 @@
-<%= form_with(model: story, local: true, html: {multipart: true} ) do |form| %>
-  <% if story.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(story.errors.count, "error") %> prohibited this story from being saved:</h2>
+<%= form_with(model: story, local: true, html: { multipart: true, class: "card p-4 shadow-sm" }) do |form| %>
 
+  <% if story.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(story.errors.count, "error") %> prohibited this story from being saved:</h4>
       <ul>
-        <% story.errors.each do |error| %>
-          <li><%= error.full_message %></li>
+        <% story.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :title, style: "display: block" %>
-    <%= form.text_field :title %>
-  </div>
-
-  <div>
-    <%= form.label :cover_image %>
-    <%= form.file_field :cover_image, class: "form-control" %>
-  </div>
-
-  <div>
-    <%= form.label :description, style: "display: block" %>
-    <%= form.text_area :description %>
-  </div>
-
-  <div>
-    <%= form.label :language, style: "display: block" %>
-    <%= form.text_field :language %>
-  </div>
-
-  <div>
-    <%= form.label :category, style: "display: block" %>
-    <%= form.text_field :category %>
+  <div class="mb-3">
+    <%= form.label :title, class: "form-label" %>
+    <%= form.text_field :title, class: "form-control", placeholder: "Enter story title" %>
   </div>
 
   <div class="mb-3">
-  <%= form.label :audio_file %>
-  <%= form.file_field :audio_file, class: "form-control" %>
-</div>
-
-  <div>
-    <%= form.label :user_id, style: "display: block" %>
-    <%= form.text_field :user_id %>
+    <%= form.label :cover_image, class: "form-label" %>
+    <%= form.file_field :cover_image, class: "form-control" %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="mb-3">
+    <%= form.label :description, class: "form-label" %>
+    <%= form.text_area :description, class: "form-control", rows: 5, placeholder: "Write a short description..." %>
   </div>
+
+  <div class="mb-3">
+    <%= form.label :language, class: "form-label" %>
+    <%= form.select :language, options_for_select(["Amharic", "Oromo", "Tigrigna", "Afar", "Somali", "Sidamo", "Wolaytta", "Gurage"], story.language), { prompt: "Select a language" }, class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :category, class: "form-label" %>
+    <%= form.select :category, options_for_select(["Folktale", "Spiritual", "Historical", "Proverb", "Legend"], story.category), { prompt: "Select a category" }, class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :audio_file, class: "form-label" %>
+    <%= form.file_field :audio_file, class: "form-control" %>
+  </div>
+
+  <div class="d-grid">
+    <%= form.submit "Save Story", class: "btn btn-primary" %>
+  </div>
+
 <% end %>
